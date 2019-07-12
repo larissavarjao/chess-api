@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "alwaysStrict": true,
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "sourceRoot": "/",
+    "target": "ES2017",
+    "strictNullChecks": true,
+    "outDir": "dist"
+  },
+  "include": [
+    "src/*.ts",
+    "src/*/*.ts",
+    "test/**/*.ts"
+  ]
+}
