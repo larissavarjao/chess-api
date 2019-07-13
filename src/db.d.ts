@@ -5,7 +5,7 @@ interface DBBase {
   deletedAt: Date | null;
 }
 
-interface DBUser extends DBBase {
+export interface DBUser extends DBBase {
   name: string;
   email: string;
   password: string;

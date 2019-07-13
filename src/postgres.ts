@@ -32,9 +32,7 @@ export enum SqlOperator {
   isNull = 'isNull',
 }
 
-function wrapSql(callable: {
-  query: (query: string, values: any[]) => Promise<pg.QueryResult>;
-}) {
+function wrapSql(callable: { query: (query: string, values: any[]) => Promise<pg.QueryResult> }) {
   return (q: TemplateStringsArray, ...values: any[]) => {
     const query: string[] = [];
     query.push(q[0]);
@@ -71,9 +69,7 @@ export enum SqlLogicOperator {
 export const sql = wrapSql(pgpool);
 
 async function sqlTransaction(
-  func: (
-    sql: (q: TemplateStringsArray, ...values: any[]) => Promise<any[]>
-  ) => Promise<void>
+  func: (sql: (q: TemplateStringsArray, ...values: any[]) => Promise<any[]>) => Promise<void>
 ) {
   while (true) {
     const client = await pgpool.connect();
@@ -111,11 +107,7 @@ async function sqlTransaction(
 }
 
 interface Migrations {
-  [n: number]:
-    | string
-    | ((
-        sql: (q: TemplateStringsArray, ...values: any[]) => Promise<any[]>
-      ) => Promise<void>);
+  [n: number]: string | ((sql: (q: TemplateStringsArray, ...values: any[]) => Promise<any[]>) => Promise<void>);
 }
 
 async function migrate(migrations: Migrations): Promise<void> {
@@ -167,39 +159,27 @@ async function internalMigrate(migrations: Migrations): Promise<void> {
 
       if (insertedMigration.id !== i + 1) {
         log(insertedMigrations);
-        log(
-          `Migration order -> ${insertedMigrations.map(u => u.id).join(',')}`
-        );
+        log(`Migration order -> ${insertedMigrations.map(u => u.id).join(',')}`);
 
         throw {
           type: 'Fatal',
-          message: `Inserted migrations are not sequential (${i} -> ${
-            insertedMigration.id
-          })`,
+          message: `Inserted migrations are not sequential (${i} -> ${insertedMigration.id})`,
         };
       }
 
       if (!migrationIds.includes(insertedMigration.id)) {
         throw {
           type: 'Fatal',
-          message: `Migration ${
-            insertedMigration.id
-          } exists on database, but was not specified.`,
+          message: `Migration ${insertedMigration.id} exists on database, but was not specified.`,
         };
       }
     }
 
     let lastExecutedMigrationId =
-      insertedMigrations.length === 0
-        ? -1
-        : insertedMigrations[insertedMigrations.length - 1].id;
+      insertedMigrations.length === 0 ? -1 : insertedMigrations[insertedMigrations.length - 1].id;
 
     for (const migrationId of migrationIds) {
-      if (
-        migrationId < 1 ||
-        (lastExecutedMigrationId !== -1 &&
-          migrationId !== lastExecutedMigrationId + 1)
-      ) {
+      if (migrationId < 1 || (lastExecutedMigrationId !== -1 && migrationId !== lastExecutedMigrationId + 1)) {
         continue;
       }
 
@@ -209,10 +189,7 @@ async function internalMigrate(migrations: Migrations): Promise<void> {
       const createdAt = new Date();
       const startTime = process.hrtime();
 
-      if (
-        typeof migrationQuery === 'string' &&
-        migrationQuery.includes('-- no transaction')
-      ) {
+      if (typeof migrationQuery === 'string' && migrationQuery.includes('-- no transaction')) {
         try {
           log(`Running migration ${migrationId} WITHOUT TRANSACTION...`);
 
