@@ -2,6 +2,7 @@ import * as express from 'express';
 import { sql } from '../postgres';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+import { DBUser } from '../db';
 
 export interface User {
   id?: string;
@@ -9,12 +10,19 @@ export interface User {
   email: string;
 }
 
+export interface NewUser {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export const JWT_SECRET = process.env.JWT_SECRET || 'thisIsNotTheRealSecretIsOnlyUsedOnDeveloperMode';
+
 export const get = async (id: string): Promise<DBUser | undefined> => {
   return (await sql`
     SELECT *
       FROM users
-      WHERE id = ${id}
-    `)[0];
+      WHERE id = ${id} ;`)[0];
 };
 
 export const getByEmail = async (email: string): Promise<DBUser | undefined> => {
@@ -44,8 +52,18 @@ export const insert = async (name: string, email: string, password: string): Pro
     ) RETURNING *`)[0];
 };
 
-export const generateAuthToken = (id: string, email: string): string => {
-  const token = jwt.sign({ id, email }, process.env.JWT_SECRET || 'thisIsNotTheRealSecretIsOnlyUsedOnDeveloperMode');
+export const update = async (name: string, id: string, email: string): Promise<DBUser> => {
+  return (await sql`
+    UPDATE users 
+      SET name = ${name},
+          email = ${email},
+          updated_at = NOW()
+      WHERE id = ${id}
+      RETURNING *`)[0];
+};
+
+export const generateAuthToken = (id: string): string => {
+  const token = jwt.sign({ id }, JWT_SECRET);
 
   return token;
 };

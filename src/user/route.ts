@@ -1,5 +1,6 @@
 import * as express from 'express';
 import * as User from './model';
+import { auth, RequestWithUser } from '../auth/auth';
 
 export const router = express.Router();
 
@@ -46,9 +47,32 @@ router.post('/auth', async (req, res) => {
       return res.status(401).send({ error: 'Unable to login' });
     }
 
-    const token = User.generateAuthToken(user.id, user.email);
-    res.send({ user, token });
+    const token = User.generateAuthToken(user.id);
+    res.send({ user: User.format(user), token });
   } catch (e) {
+    console.log('Error', e);
     res.sendStatus(400);
+  }
+});
+
+router.put('/users', auth, async (req: RequestWithUser, res) => {
+  const updates = Object.keys(req.body);
+  const allowedUpdates = ['name', 'email'];
+  const isValidOperation = updates.every(update => allowedUpdates.includes(update));
+
+  if (!isValidOperation) {
+    return res.status(400).send({ error: 'Invalid operation' });
+  }
+
+  try {
+    const user = req.user;
+    if (user) {
+      updates.forEach(update => ((user as any)[update] = req.body[update]));
+      await User.update(user.name, user.id, user.email);
+      res.send({ user: User.format(user) });
+    }
+  } catch (e) {
+    console.log('Error', e);
+    return res.status(400).send();
   }
 });
