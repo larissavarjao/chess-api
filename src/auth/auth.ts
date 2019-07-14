@@ -15,7 +15,9 @@ export const auth = async (req: express.Request, res: express.Response, next: ex
     const decoded = <{ id: string; iat: string }>jwt.verify(token, JWT_SECRET);
     const user = await User.get(decoded.id);
 
-    request.user = user;
+    if (user) {
+      request.user = user;
+    }
 
     next();
   } catch (e) {

@@ -22,15 +22,14 @@ export const get = async (id: string): Promise<DBUser | undefined> => {
   return (await sql`
     SELECT *
       FROM users
-      WHERE id = ${id} ;`)[0];
+      WHERE id = ${id} AND deleted_at IS NULL ;`)[0];
 };
 
 export const getByEmail = async (email: string): Promise<DBUser | undefined> => {
   return (await sql`
     SELECT *
       FROM users
-      WHERE email = ${email}
-    `)[0];
+      WHERE email = ${email} AND deleted_at IS NULL ;`)[0];
 };
 
 export const insert = async (name: string, email: string, password: string): Promise<DBUser> => {
@@ -60,6 +59,13 @@ export const update = async (name: string, id: string, email: string): Promise<D
           updated_at = NOW()
       WHERE id = ${id}
       RETURNING *`)[0];
+};
+
+export const remove = async (id: string): Promise<DBUser> => {
+  return (await sql`
+    UPDATE users 
+      SET deleted_at = NOW()
+      WHERE id = ${id} ;`)[0];
 };
 
 export const generateAuthToken = (id: string): string => {

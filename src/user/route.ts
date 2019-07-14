@@ -66,13 +66,28 @@ router.put('/users', auth, async (req: RequestWithUser, res) => {
 
   try {
     const user = req.user;
-    if (user) {
-      updates.forEach(update => ((user as any)[update] = req.body[update]));
-      await User.update(user.name, user.id, user.email);
-      res.send({ user: User.format(user) });
+    if (!user) {
+      return res.status(401).send();
     }
+    updates.forEach(update => ((user as any)[update] = req.body[update]));
+    await User.update(user.name, user.id, user.email);
+    res.send({ user: User.format(user) });
   } catch (e) {
     console.log('Error', e);
     return res.status(400).send();
+  }
+});
+
+router.delete('/users', auth, async (req: RequestWithUser, res) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      return res.status(401).send();
+    }
+    const userRemoved = await User.remove(user.id);
+    res.send({ user: User.format(userRemoved) });
+  } catch (e) {
+    console.log('Error ', e);
+    return res.status(404).send();
   }
 });
