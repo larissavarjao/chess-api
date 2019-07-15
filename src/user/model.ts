@@ -5,7 +5,7 @@ import * as jwt from 'jsonwebtoken';
 import { DBUser } from '../db';
 
 export interface User {
-  id?: string;
+  id: string;
   name: string;
   email: string;
 }
@@ -57,7 +57,7 @@ export const update = async (name: string, id: string, email: string): Promise<D
       SET name = ${name},
           email = ${email},
           updated_at = NOW()
-      WHERE id = ${id}
+      WHERE id = ${id} AND deleted_at IS NULL 
       RETURNING *`)[0];
 };
 
@@ -65,7 +65,7 @@ export const remove = async (id: string): Promise<DBUser> => {
   return (await sql`
     UPDATE users 
       SET deleted_at = NOW()
-      WHERE id = ${id} ;`)[0];
+      WHERE id = ${id} RETURNING * ;`)[0];
 };
 
 export const generateAuthToken = (id: string): string => {

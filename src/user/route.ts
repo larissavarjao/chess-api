@@ -11,10 +11,10 @@ router.post('/users', async (req, res) => {
   if (!newUser.name) {
     return res.sendStatus(401);
   }
-  if (!newUser.email && !isValidEmail(newUser.email)) {
+  if (!newUser.email || !isValidEmail(newUser.email)) {
     return res.sendStatus(401);
   }
-  if (!newUser.password) {
+  if (!newUser.password || newUser.password.length < 7) {
     return res.sendStatus(401);
   }
 
@@ -43,7 +43,7 @@ router.post('/auth', async (req, res) => {
       return res.status(401).send({ error: 'Unable to login' });
     }
 
-    const isMatch = User.comparePassword(req.body.password, user.password);
+    const isMatch = await User.comparePassword(req.body.password, user.password);
     if (!isMatch) {
       return res.status(401).send({ error: 'Unable to login' });
     }
@@ -89,7 +89,7 @@ router.delete('/users', auth, async (req: RequestWithUser, res) => {
     if (!user) {
       return res.status(401).send();
     }
-    const userRemoved = await User.remove(user.id);
+    const userRemoved = await User.remove(user!.id);
     res.send({ user: User.format(userRemoved) });
   } catch (e) {
     console.log('Error ', e);
