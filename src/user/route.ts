@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as User from './model';
 import { auth, RequestWithUser } from '../auth/auth';
+import { isValidEmail } from '../utils/email';
 
 export const router = express.Router();
 
@@ -10,7 +11,7 @@ router.post('/users', async (req, res) => {
   if (!newUser.name) {
     return res.sendStatus(401);
   }
-  if (!newUser.email) {
+  if (!newUser.email && !isValidEmail(newUser.email)) {
     return res.sendStatus(401);
   }
   if (!newUser.password) {
@@ -62,6 +63,10 @@ router.put('/users', auth, async (req: RequestWithUser, res) => {
 
   if (!isValidOperation) {
     return res.status(400).send({ error: 'Invalid operation' });
+  }
+
+  if (req.body.email && !isValidEmail(req.body.email)) {
+    return res.sendStatus(401);
   }
 
   try {
