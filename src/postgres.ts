@@ -149,7 +149,7 @@ async function internalMigrate(migrations: Migrations): Promise<void> {
     });
 
     log('Obtaining migration lock');
-    //await sql`SELECT pg_advisory_lock(1)`;
+    await sql`SELECT pg_advisory_lock(1)`;
     log('Got migration lock');
 
     const insertedMigrations = await sql`SELECT * FROM "migrations" ORDER BY "id"`;
