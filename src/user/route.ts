@@ -21,7 +21,7 @@ router.post('/users', async (req, res) => {
   try {
     const user = await User.insert(newUser.name, newUser.email, newUser.password);
 
-    return res.send(User.format(user));
+    return res.status(201).send(User.format(user));
   } catch (e) {
     console.error(e);
     return res.status(400).send();
