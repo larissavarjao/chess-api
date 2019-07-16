@@ -1,4 +1,3 @@
-import * as express from 'express';
 import { sql } from '../postgres';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';

@@ -68,7 +68,7 @@ export enum SqlLogicOperator {
 
 export const sql = wrapSql(pgpool);
 
-async function sqlTransaction(
+export async function sqlTransaction(
   func: (sql: (q: TemplateStringsArray, ...values: any[]) => Promise<any[]>) => Promise<void>
 ) {
   while (true) {
