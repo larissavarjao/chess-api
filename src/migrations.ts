@@ -16,7 +16,7 @@ export default {
         deleted_at TIMESTAMP,
         move_to TEXT NOT NULL,
         move_from TEXT NOT NULL
-    `,
+    )`,
   4: `CREATE TABLE IF NOT EXISTS users_moves (
         user_id UUID NOT NULL REFERENCES users(id),
         move_id UUID NOT NULL REFERENCES moves(id)
