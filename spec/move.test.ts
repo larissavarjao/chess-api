@@ -4,8 +4,7 @@ import { setupDB } from './fixtures/db';
 import { generateUser } from './generators/user';
 import { getMoves, generateMoviment, createMove } from './utils/move';
 import { createUser, loginUser } from './utils/user';
-import { generateMove } from './generators/move';
-import { validateMove } from '../src/shared/validate';
+import { generateMove, invalidMove, invalidMove2, invalidMove3, invalidMove4, invalidMove5 } from './generators/move';
 import { User } from '../src/user/model';
 
 describe('User test', () => {
@@ -32,7 +31,7 @@ describe('User test', () => {
     expect(letter).toBeString();
     expect(letter.charCodeAt(0)).toBeWithin(65, 73);
     expect(parseInt(number)).toBeNumber();
-    expect(number).toBeWithin(1, 8);
+    expect(number).toBeWithin(1, 9);
   });
 
   test('User should not create a moviment without moveFrom', async () => {
@@ -53,44 +52,68 @@ describe('User test', () => {
     expect(response.status).toBe(401);
   });
 
-  test('Validate function is with correct params', async () => {
-    const move = validateMove('A5');
-
-    expect(move).toBe(true);
-  });
-
-  test('Validate function is with invalid letter', async () => {
-    const move = validateMove('0A');
-
-    expect(move).toBe(false);
-  });
-
-  test('Validate function is with invalid letter', async () => {
-    const move = validateMove('A9');
-
-    expect(move).toBe(false);
-  });
-
-  test('Validate function is with invalid letter', async () => {
-    const move = validateMove('A0');
-
-    expect(move).toBe(false);
-  });
-
-  test('Validate function is with invalid letter', async () => {
-    const move = validateMove('I8');
-
-    expect(move).toBe(false);
-  });
-
-  test('Validate function is with invalid letter', async () => {
-    const move = validateMove('@8');
-
-    expect(move).toBe(false);
-  });
-
   test('User should not get his moves with invalid token', async () => {
     const response = await getMoves('invalidToken');
+
+    expect(response.status).toBe(401);
+  });
+
+  test('User should not insert with invalid move', async () => {
+    const response = await createMove(invalidMove, moviment.moveTo, userDBToken);
+
+    expect(response.status).toBe(401);
+  });
+
+  test('User should not insert with invalid move', async () => {
+    const response = await createMove(invalidMove2, moviment.moveTo, userDBToken);
+
+    expect(response.status).toBe(401);
+  });
+
+  test('User should not insert with invalid move', async () => {
+    const response = await createMove(invalidMove3, moviment.moveTo, userDBToken);
+
+    expect(response.status).toBe(401);
+  });
+
+  test('User should not insert with invalid move', async () => {
+    const response = await createMove(invalidMove4, moviment.moveTo, userDBToken);
+
+    expect(response.status).toBe(401);
+  });
+
+  test('User should not insert with invalid move', async () => {
+    const response = await createMove(invalidMove5, moviment.moveTo, userDBToken);
+
+    expect(response.status).toBe(401);
+  });
+
+  test('User should not insert with invalid move', async () => {
+    const response = await createMove(moviment.moveFrom, invalidMove, userDBToken);
+
+    expect(response.status).toBe(401);
+  });
+
+  test('User should not insert with invalid move', async () => {
+    const response = await createMove(moviment.moveFrom, invalidMove2, userDBToken);
+
+    expect(response.status).toBe(401);
+  });
+
+  test('User should not insert with invalid move', async () => {
+    const response = await createMove(moviment.moveFrom, invalidMove3, userDBToken);
+
+    expect(response.status).toBe(401);
+  });
+
+  test('User should not insert with invalid move', async () => {
+    const response = await createMove(moviment.moveFrom, invalidMove4, userDBToken);
+
+    expect(response.status).toBe(401);
+  });
+
+  test('User should not insert with invalid move', async () => {
+    const response = await createMove(moviment.moveFrom, invalidMove5, userDBToken);
 
     expect(response.status).toBe(401);
   });

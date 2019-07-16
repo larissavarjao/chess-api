@@ -11,8 +11,8 @@ describe('User test', () => {
   let secondDB: DBUser;
   let secondDBToken: string;
 
-  beforeAll(() => {
-    setupDB();
+  beforeAll(async () => {
+    await setupDB();
   });
 
   beforeEach(async () => {

@@ -9,3 +9,9 @@ export const generateMove = (): Move => {
     moveTo: generateMoviment(),
   };
 };
+
+export const invalidMove = 'A9';
+export const invalidMove2 = 'A0';
+export const invalidMove3 = '@8';
+export const invalidMove4 = 'I8';
+export const invalidMove5 = '8I';

@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as Move from './model';
 import { auth, RequestWithUser } from '../auth/auth';
+import { validateMove } from '../shared/validate';
 
 export const router = express.Router();
 
@@ -26,10 +27,10 @@ router.post('/moves', auth, async (req: RequestWithUser, res) => {
     if (!user) {
       return res.status(401).send();
     }
-    if (!from) {
+    if (!from || !validateMove(from)) {
       return res.status(401).send();
     }
-    if (!to) {
+    if (!to || !validateMove(to)) {
       return res.status(401).send();
     }
 
