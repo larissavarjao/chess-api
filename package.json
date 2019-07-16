@@ -2,7 +2,7 @@
   "name": "chess-api",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/server.js",
+  "main": "dist/index.js",
   "scripts": {
     "tsc": "tsc",
     "build": "npm run tsc",
@@ -15,7 +15,6 @@
   "dependencies": {
     "@types/validator": "^10.11.1",
     "bcrypt": "^3.0.6",
-    "body-parser": "^1.19.0",
     "crypto": "^1.0.1",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
@@ -50,9 +49,6 @@
     "transform": {
       "\\.(ts)$": "ts-jest"
     },
-    "preset": "ts-jest",
-    "setupFilesAfterEnv": [
-      "jest-extended"
-    ]
+    "preset": "ts-jest"
   }
 }
