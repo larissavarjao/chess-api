@@ -1,5 +1,6 @@
 import { sql, sqlTransaction } from '../postgres';
 import { DBMove } from '../db';
+import { getPossibleMoviments } from '../shared/moviment';
 
 export interface Move {
   id: string;
@@ -20,6 +21,10 @@ export const getAllMovesFromUser = async (userId: string): Promise<DBMove[] | un
       FROM users_moves um
       LEFT JOIN moves ON um.move_id = id
       WHERE user_id = ${userId} AND deleted_at IS NULL ;`;
+};
+
+export const getPossibilities = (moveFrom: string): string[] => {
+  return getPossibleMoviments(moveFrom);
 };
 
 export const insert = async (userId: string, moveFrom: string, moveTo: string): Promise<DBMove> => {

@@ -8,9 +8,9 @@ export const createMove = (moveFrom: string, moveTo: string, token: string) => {
     .send({ moveFrom, moveTo });
 };
 
-export const getMoves = (token: string) => {
+export const getMoves = (token: string, moveFrom?: string) => {
   return request(app)
-    .get('/moves')
+    .get(`/moves${moveFrom ? `?moveFrom=${moveFrom}` : ''}`)
     .set('Authorization', `Bearer ${token}`)
     .send();
 };

@@ -4,7 +4,17 @@ import { setupDB } from './fixtures/db';
 import { generateUser } from './generators/user';
 import { getMoves, generateMoviment, createMove } from './utils/move';
 import { createUser, loginUser } from './utils/user';
-import { generateMove, invalidMove, invalidMove2, invalidMove3, invalidMove4, invalidMove5 } from './generators/move';
+import {
+  generateMove,
+  invalidMove,
+  invalidMove2,
+  invalidMove3,
+  invalidMove4,
+  invalidMove5,
+  expectedForC3,
+  expectedForA1,
+  expectedForG8,
+} from './generators/move';
 import { User } from '../src/user/model';
 
 describe('User test', () => {
@@ -48,12 +58,6 @@ describe('User test', () => {
 
   test('User should not create a moviment without moveTo', async () => {
     const response = await createMove(moviment.moveFrom, moviment.moveTo, 'invalidToken');
-
-    expect(response.status).toBe(401);
-  });
-
-  test('User should not get his moves with invalid token', async () => {
-    const response = await getMoves('invalidToken');
 
     expect(response.status).toBe(401);
   });
@@ -127,5 +131,44 @@ describe('User test', () => {
     expect(moves!.length).toBe(1);
     expect(moves![0].moveFrom).toBe(moviment.moveFrom);
     expect(moves![0].moveTo).toBe(moviment.moveTo);
+  });
+
+  test('User should not get his moves with invalid token', async () => {
+    const response = await getMoves('invalidToken');
+
+    expect(response.status).toBe(401);
+  });
+
+  test('User should receive correct moves with querystring', async () => {
+    const response = await getMoves(userDBToken, 'C3');
+    const responseMoveFrom = response.body.moves;
+
+    expect(response.status).toBe(200);
+    expect(responseMoveFrom).not.toBeNull();
+    expect(responseMoveFrom).toBeArray();
+    expect(responseMoveFrom).toHaveLength(8);
+    expect(responseMoveFrom).toIncludeAllMembers(expectedForC3);
+  });
+
+  test('User should receive correct moves with querystring', async () => {
+    const response = await getMoves(userDBToken, 'A1');
+    const responseMoveFrom = response.body.moves;
+
+    expect(response.status).toBe(200);
+    expect(responseMoveFrom).not.toBeNull();
+    expect(responseMoveFrom).toBeArray();
+    expect(responseMoveFrom).toHaveLength(2);
+    expect(responseMoveFrom).toIncludeAllMembers(expectedForA1);
+  });
+
+  test('User should receive correct moves with querystring', async () => {
+    const response = await getMoves(userDBToken, 'G8');
+    const responseMoveFrom = response.body.moves;
+
+    expect(response.status).toBe(200);
+    expect(responseMoveFrom).not.toBeNull();
+    expect(responseMoveFrom).toBeArray();
+    expect(responseMoveFrom).toHaveLength(3);
+    expect(responseMoveFrom).toIncludeAllMembers(expectedForG8);
   });
 });
