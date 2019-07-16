@@ -6,9 +6,8 @@
   "scripts": {
     "tsc": "tsc",
     "build": "npm run tsc",
-    "start": "node .",
-    "dev": "nodemon --watch src -e ts --exec npm run dev:start",
-    "dev:start": "npm run build && npm run start",
+    "start": "npm run build && node .",
+    "dev": "nodemon --watch src -e ts --exec npm run start",
     "test": "NODE_ENV=test jest --watch"
   },
   "author": "Larissa Varjão",
@@ -51,6 +50,9 @@
     "transform": {
       "\\.(ts)$": "ts-jest"
     },
-    "preset": "ts-jest"
+    "preset": "ts-jest",
+    "setupFilesAfterEnv": [
+      "jest-extended"
+    ]
   }
 }
