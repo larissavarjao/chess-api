@@ -1,5 +1,3 @@
-import 'jest-extended';
-
 export const validateMove = (move: string): boolean => {
   const firstLetter = move[0];
   const secondLetter = move[1];
