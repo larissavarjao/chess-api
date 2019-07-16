@@ -10,3 +10,13 @@ export interface DBUser extends DBBase {
   email: string;
   password: string;
 }
+
+export interface DBMove extends DBBase {
+  moveFrom: string;
+  moveTo: string;
+}
+
+export interface DBUsersMove {
+  userId: string;
+  moveId: string;
+}
