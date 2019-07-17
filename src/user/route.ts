@@ -18,6 +18,11 @@ router.post('/users', async (req, res) => {
     return res.sendStatus(401);
   }
 
+  const userAlreadyHasEmail = await User.getByEmail(newUser.email);
+  if (userAlreadyHasEmail) {
+    return res.sendStatus(400);
+  }
+
   try {
     const user = await User.insert(newUser.name, newUser.email, newUser.password);
 
